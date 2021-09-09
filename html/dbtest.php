@@ -16,17 +16,17 @@ echo "Connected successfully";
 
 /* Prepare an insert statement */
 
-if ($stmt = $conn->prepare("SELECT UserId, FirstName, LastName, PhoneNumber, Email FROM pcm.Users;")) {
+if ($stmt = $conn->prepare("SELECT UserId, FirstName, LastName, Email FROM pcm.Users;")) {
 
     /* execute statement */
     $stmt->execute();
 
     /* bind result variables */
-    $stmt->bind_result($id, $fname, $lname, $phonenum, $email);
+    $stmt->bind_result($id, $fname, $lname, $email);
 
     /* fetch values */
     while ($stmt->fetch()) {
-        printf ("<p>[%s]User (%s %s) Contactable via: %s %s</p>\n",$id, $fname, $lname, $phonenum, $email);
+        printf ("<p>[%s]User (%s %s) Contactable via: %s</p>\n",$id, $fname, $lname, $email);
     }
 
     /* close statement */

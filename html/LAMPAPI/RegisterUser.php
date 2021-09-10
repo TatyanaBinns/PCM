@@ -4,7 +4,6 @@
 
 	$firstName = $inData["firstname"];
 	$lastName = $inData["lastname"];
-	$phoneNumber = $inData["phonenumber"];
 	$email = $inData["email"];
 	$userId = $inData["userid"];
 	$password = $["password"];
@@ -18,8 +17,8 @@
 
 	else
 	{
-		$stmt = $conn->prepare("INSERT into Users (FirstName, LastName, PhoneNumber, Email, UserId, PasswordHash) VALUES(?,?,?,?,?,?)");
-		$stmt->bind_param("ssssss", $firstName, $lastName, $phoneNumber, $email, $userId, password_hash($password, PASSWORD_DEFAULT));
+		$stmt = $conn->prepare("INSERT into Users (FirstName, LastName, Email, UserId, PasswordHash) VALUES(?,?,?,?,?)");
+		$stmt->bind_param("sssss", $firstName, $lastName, $email, $userId, password_hash($password, PASSWORD_DEFAULT));
 		$stmt->execute();
 		$stmt->close();
 		$stmt->close();

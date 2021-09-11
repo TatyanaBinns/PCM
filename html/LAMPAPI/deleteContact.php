@@ -18,8 +18,8 @@
 
 	else
 	{
-		$stmt = $conn->prepare("SELECT FROM Contacts (UserId,FirstName,LastName,Email) VALUES(?,?,?,?)");
-		$stmt->bind_param("ssss", $userId, $firstname, $lastname, $email);
+		$stmt = $conn->prepare("SELECT FROM Contacts (UserId,NameFirst,NameLast,Email) VALUES(?,?,?,?)");
+		$stmt->bind_param("isss", $userId, $firstname, $lastname, $email);
 		$stmt->execute();
 
 		$result = $stmt->get_result();
@@ -35,7 +35,7 @@
 			$stmt->close();
 
 			$stmt = $conn->prepare("DELETE FROM Contacts (UserId,FirstName,Lastname,Email) VALUES(?,?,?,?)");
-			$stmt->bind_param("ssss", $userId, $firstname, $lastname, $email);
+			$stmt->bind_param("isss", $userId, $firstname, $lastname, $email);
 			$stmt->execute();
 			$stmt->close();
 			$conn->close();

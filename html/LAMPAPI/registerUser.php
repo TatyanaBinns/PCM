@@ -17,8 +17,8 @@
 
 	else
 	{
-		$stmt = $conn->prepare("SELECT FirstName, LastName, Email FROM Users WHERE (FirstName=? AND LastName=?) OR Email=?");
-		$stmt->bind_param("sss", $firstName, $lastName, $email);
+		$stmt = $conn->prepare("SELECT FirstName, LastName, Email FROM Users WHERE Email=?");
+		$stmt->bind_param("s", $email);
 		$stmt->execute();
 		$result = $stmt->get_result();
 
@@ -31,12 +31,30 @@
 		{
 			$stmt->close();
 
-			$stmt = $conn->prepare("INSERT into Users (UserId, FirstName, LastName, Email, PasswordHash) VALUES(?,?,?,?,?)");
-			$stmt->bind_param("issss", $userId, $firstName, $lastName, $email, password_hash($password, PASSWORD_DEFAULT));
-			$stmt->execute();
-			$stmt->close();
-			$conn->close();
-			returnWithError("");
+			if (strlen($password) < 8)
+			{
+				returnWithError("Password length is not at least 11 characters long");
+			}
+			else if (!preg_match('/[A-Z]/', $password))
+			{
+				returnWithError("Does not contain at least one upper case letter");
+			}
+			else if (!preg_match('/[0-9]/', $password))
+			{
+				returnWithError("Does not contain at least one integer");
+			}
+			else if (!preg_match('/\W/', $password))
+			{
+				returnWithError("Does not contain at least one special character");
+			}
+			else {
+				$stmt = $conn->prepare("INSERT into Users (UserId, FirstName, LastName, Email, PasswordHash) VALUES(?,?,?,?,?)");
+				$stmt->bind_param("issss", $userId, $firstName, $lastName, $email, password_hash($password, PASSWORD_DEFAULT));
+				$stmt->execute();
+				$stmt->close();
+				$conn->close();
+				returnWithError("");
+			}
 		}
 	}
 

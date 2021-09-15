@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <!-- beginning and load libraries -->
         <meta charset="utf-8" />
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
         <title>Login COP4331</title>
@@ -36,10 +37,10 @@
                 <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
                     <form>
                         <div class="d-flex justify-content-center">
-                            <p class="lead fw-bold mb-0 me-3">PERSONAL CONTACT MANAGER (PCM)</p>
+                            <p class="lead fw-bold mb-0">PERSONAL CONTACT MANAGER (PCM)</p>
                         </div>
                         <div class="d-flex justify-content-center">
-                            <p class="lead font-weight-light mb-0 me-3">COP4331</p>
+                            <p class="lead font-weight-light mb-0">COP4331</p>
                         </div>
 
                         <div class="divider d-flex align-items-center my-4">
@@ -85,57 +86,44 @@
                     var userName = $("#loginName").val();
                     var userPass = $("#userPassword").val();
                     var endPoint = "http://pcm.sudonet.cc/LAMPAPI/login.php";
-                    var userIsValid = false;
 
+                    // When you add both login and password, it requests API. Else, it will show an error message.
+                    // This validates if login and password have content.
                     if (userName && userPass) {
-                        var request = $.ajax({
-                            method: "POST",
-                            url: endPoint,
-                            data: JSON.stringify({ login: userName, password: userPass })
-                        })
-                        .done(function( response ) {
-                            console.log( "Data1: " + JSON.stringify(response) );
-                            var data = $.parseJSON(response);
-                            if (data.id > 0 ) {
-                                userIsValid = true;
-                            };
-                        })
-                        .fail(function() {
-                            alert( "error" );
-                        })
-                        .always(function() {
-
-                        });
-                        if (userIsValid) {
-                            $("body").load("contacts.html");
-                        } else {
-                            $("#errorMessage").text("No Records Found");
-                        };
-
+                        requestAPI(endPoint, userName, userPass );
                     } else {
                         $("#errorMessage").text("Please enter Email and Password");
                     };
                 })
             });
-            function requestAPI(endPoint, userName, userPass) {
-                var response;
+
+            function requestAPI( endPoint, userName, userPass ) {
                 var request = $.ajax({
                     method: "POST",
                     url: endPoint,
-                    async: false,
                     data: JSON.stringify({ login: userName, password: userPass })
                 })
                 .done(function( response ) {
-                    console.log( "Data1: " + JSON.stringify(response) );
+                    var data = response;
+                    if (data.id > 0 ) {
+                        var fullUserName = data.firstName + " " + data.lastName;
+                        $("#errorMessage").text( "Welcome: " + fullUserName);
+                        $("#loginName").val("");
+                        $("#userPassword").val("");
+
+                        //Launches Welcome Contacts Page
+                        location.href = "contacts.html?userId=" + data.id + "&userFullName=" + encodeURI(fullUserName);
+                    } else {
+                        $("#errorMessage").text(data.error);
+                    };
                 })
-                .fail(function() {
-                    alert( "error" );
+                .fail(function(e) {
+                    $("#errorMessage").text("Communication " + e.statusText + " !");
                 })
                 .always(function() {
-                    return response;
                 });
+            }
 
-            };
         </script>
     </body>
 </html>

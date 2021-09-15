@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <title>Login COP4331</title>
+        <script src="js/jquery-3.6.0.js" type="text/javascript" ></script>
+        <script src="js/jquery-ui.js" type="text/javascript" ></script>
+        <script src="js/bootstrap.js" type="text/javascript" ></script>
+        <link rel="icon" href="data:,">
+        <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <link href="css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css"/>
+        <link href="css/jquery-ui.css" rel="stylesheet" type="text/css"/>
+
+        <style>
+            .divider:after,
+            .divider:before {
+                content: "";
+                flex: 1;
+                height: 1px;
+                background: #eee;
+            }
+            .h-custom {
+                height: calc(100% - 73px);
+            }
+
+
+        </style>
+    </head>
+
+    <body class="vh-100">
+        <div class="container-fluid h-custom">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-append">
+                            <button id="profileButton"  class="btn btn-outline-secondary" type="button">Profile</button>
+                        </div>
+                        <input id="labelUserName" type="text" class="form-control text-center" placeholder="Welcome: " aria-label="Recipient's username" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button id="exitButton"  class="btn btn-outline-secondary" type="button">Exit</button>
+                        </div>
+                    </div>
+
+                    <form class="form-vertical mt-5" action="" method="post">
+
+                        <div class="form-outline mb-4">
+                            <input type="text" id="firstName" class="form-control autocomplete"/>
+                            <label class="form-label">* First Name</label>
+                        </div>
+
+                        <div class="form-outline mb-4">
+                            <input type="text" id="lastName" class="form-control autocomplete"/>
+                            <label class="form-label">* Last Name</label>
+                        </div>
+
+                        <div class="form-outline mb-4">
+                            <input type="text" id="emailAddress" class="form-control autocomplete"/>
+                            <label class="form-label">* Email Address</label>
+                        </div>
+
+                        <div class="form-outline mb-4">
+                            <input type="text" id="phoneNumber" class="form-control"/>
+                            <label class="form-label">Phone Number</label>
+                        </div>
+
+                        <div class="form-outline mb-4">
+                            <input type="text" id="creationDate" class="form-control"/>
+                            <label class="form-label">Date Created</label>
+                        </div>
+
+                        <div>
+                            <div class="text-center text-lg-start mt-4 pt-2">
+                                <button id="createButton" type="button" class="btn btn-primary btn-block">Create</button>
+                                <button id="updateButton" type="button" class="btn btn-primary btn-block">Update</button>
+                                <button id="deleteButton" type="button" class="btn btn-primary btn-block">Delete</button>
+                            </div>
+                        </div>
+
+                        <div class="divider d-flex align-items-center my-4">
+                            <p id="errorMessage" class="text-center fw-bold mx-3 mb-0"></p>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            $(document).ready(function() {
+
+                //Gets parameters from the URL
+                var searchParams = new URLSearchParams(window.location.search);
+                if (searchParams.has("userId")) {
+                    var userId = searchParams.get("userId")
+                    var param = searchParams.get("userFullName")
+                }
+
+                var contacts = GetContactsForUser(userId);
+
+                $("#labelUserName" ).attr('disabled', 'disabled');
+                $("#creationDate" ).attr('disabled', 'disabled');
+
+                $("#labelUserName").val("Welcome:  " + param);
+
+
+                $("#exitButton").click( function() {
+                    location.href ="index.html";
+                });
+
+                $("button").focusout( function() {
+                    $("#errorMessage").text("");
+                });
+
+                $("#createButton").click( function() {
+                    var firstName = $("#firstName").val();
+                    var lastName = $("#lastName").val();
+                    var emailAddress = $("#emailAddress").val();
+                    var phoneNumber = $("#phoneNumber").val();
+
+                    if ( firstName && lastName && emailAddress ) {
+                        requestAPI( userId, firstName, lastName, emailAddress, phoneNumber );
+                    } else {
+                        $("#errorMessage").text("More Information Required !");
+                    };
+                    // $("#deleteButton").prop("disabled",true);
+                });
+
+                $("#updateButton").click( function() {
+                    var firstName = $("#firstName").val();
+                    var lastName = $("#lastName").val();
+                    var emailAddress = $("#emailAddress").val();
+                    var phoneNumber = $("#phoneNumber").val();
+                    var endPoint = "http://pcm.sudonet.cc/LAMPAPI/addContact.php";
+
+                    $("#errorMessage").text("This Function is not implemented yet");
+                });
+
+                $("#deleteButton").click( function() {
+                    var firstName = $("#firstName").val();
+                    var lastName = $("#lastName").val();
+                    var emailAddress = $("#emailAddress").val();
+                    var phoneNumber = $("#phoneNumber").val();
+                    var endPoint = "http://pcm.sudonet.cc/LAMPAPI/addContact.php";
+
+                    $("#errorMessage").text("This Function is not implemented yet");
+                });
+
+            });
+
+            function GetContactsForUser( userId ) {
+                var endPoint = "http://pcm.sudonet.cc/LAMPAPI/searchContacts.php";
+                var request = $.ajax({
+                    method: "POST",
+                    url: endPoint,
+                    data: JSON.stringify({
+                        userId: userId
+                    })
+                })
+                .done(function( response ) {
+                    var fullName_array = {};
+                    var email_array = {};
+                    var data = response;
+                    if ( !data.error ) {
+                        var contactId = [];
+                        var contactFirstName = [];
+                        var contactFullName = [];
+                        var contactEmail = [];
+                        $.each(data.results, function( index, value ) {
+                            var contact = value.split(" : ");
+                            contactId.push(contact[0]);
+                            contactFullName.push(contact[1] + " " + contact[2]);
+                            contactEmail.push(contact[3]);
+                            fullName_array[contact[1] + " " + contact[2]] = contact[0];
+                            email_array[contact[3]] = contact[0];
+                        });
+                        $(".autocomplete").autocomplete({
+                            source: contactFullName,
+                            minLength: 3,
+                            select: function(event, ui) {
+                                console.log("ContactId: " + fullName_array[ui.item.value]);
+                            }
+                        });
+                        $(".autocomplete#emailAddress").autocomplete({
+                            source: contactEmail,
+                            minLength: 3,
+                            select: function(event, ui) {
+                                console.log("ContactId: " + email_array[ui.item.value]);
+                            }
+                        });
+                    } else {
+                        $("#errorMessage").text(data.error);
+                    };
+                })
+                .fail(function(e) {
+                    $("#errorMessage").text("Communication " + e.statusText + " !");
+                })
+                .always(function() {
+                });
+            }
+
+            function requestAPI( userId, firstName, lastName, emailAddress, phoneNumber ) {
+                var endPoint = "http://pcm.sudonet.cc/LAMPAPI/addContact.php";
+                var request = $.ajax({
+                    method: "POST",
+                    url: endPoint,
+                    data: JSON.stringify({
+                        userId: userId,
+                        firstname: firstName,
+                        lastname: lastName,
+                        email: emailAddress,
+                        phonenumber: phoneNumber
+                    })
+                })
+                .done(function( response ) {
+                    var data = response;
+                    if ( !data.error ) {
+                        $("#errorMessage").text( "Contact created successfully.");
+                        $("input:enabled").val("");
+                    } else {
+                        $("#errorMessage").text(data.error);
+                    };
+                })
+                .fail(function(e) {
+                    $("#errorMessage").text("Communication " + e.statusText + " !");
+                })
+                .always(function() {
+                });
+            }
+
+        </script>
+    </body>
+</html>

@@ -2,10 +2,8 @@
 	
 	$inData = getRequestInfo();
 
-	$userId = $inData["UserId"];
-	$firstname = $inData["firstname"];
-	$lastname = $inData["lastname"];
-	$email = $inData["email"];
+	$userId = $inData["userId"];
+	$contactId = $inData["contactId"];
 
 	// Create connection
 	$conn = new mysqli("localhost", "contactsadmin", 
@@ -18,8 +16,8 @@
 
 	else
 	{
-		$stmt = $conn->prepare("SELECT FROM Contacts (UserId,NameFirst,NameLast,Email) VALUES(?,?,?,?)");
-		$stmt->bind_param("isss", $userId, $firstname, $lastname, $email);
+		$stmt = $conn->prepare("SELECT FROM Contacts (UserId,ContactId) VALUES(?,?)");
+		$stmt->bind_param("ii", $userId, $contactId);
 		$stmt->execute();
 
 		$result = $stmt->get_result();
@@ -34,12 +32,24 @@
 		{
 			$stmt->close();
 
-			$stmt = $conn->prepare("DELETE FROM Contacts (UserId,FirstName,Lastname,Email) VALUES(?,?,?,?)");
-			$stmt->bind_param("isss", $userId, $firstname, $lastname, $email);
+			$stmt = $conn->prepare("DELETE FROM Contacts (UserId,ContactId) VALUES(?,?)");
+			$stmt->bind_param("ii", $userId, $contactId);
 			$stmt->execute();
-			$stmt->close();
-			$conn->close();
-			returnWithError("");
+			
+			$result = $stmt->get_result();
+			
+			if ($row = $result->fetch_assoc())
+			{
+				returnWithError("Contact wasn't deleted.");
+				$stmt->close();
+			}
+			
+			else
+			{
+				$stmt->close();
+				$conn->close();
+				returnWithError("");
+			}
 		}
 
 	}

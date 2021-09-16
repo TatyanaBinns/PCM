@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap');
+body
+{
+	font-family: Verdana, sans-serif;
+	
+	background:  #cae4e1;
+
+}
+
+.wrapper_form
+{
+	
+	background: white;
+	width: 500px;
+	padding: 40px;
+	margin: 5% auto 0;
+	position: relative;
+	
+	border-top: 30px solid #4d4d4d;
+	align-items: left;
+
+	font-size: large;
+	
+	
+}
+
+
+label
+{
+	display: inline-block;
+	width: 140px;
+	text-align: left;
+	font-size: large;
+
+}
+
+.image-size
+{
+	width: 200px; 
+	height:200px;
+	
+
+}
+
+.button
+{
+	height: auto;
+	width: 200px;
+	font-size: 20px;
+	background-color:#228b7d;
+	color:white;
+	border-radius: 50px;
+    transform: translate(25%, 25%);
+  		
+}
+
+.button:hover
+{
+	background-color:#13665b;
+	
+	
+}
+
+h2
+{
+	
+	font-size: x-large;
+}
+
+input [type="firstname"], [type="email"], [type="password"], [type="firstname"], [type="lastname"]
+{
+	width: 55%;
+	height: 25px;
+	font-size: medium;
+	
+	
+}

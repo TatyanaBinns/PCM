@@ -7,6 +7,7 @@
 	$lastName = $inData["lastname"];
 	$email = $inData["email"];
 	$password = $inData["password"];
+	$confirmpassword = $inData["confirmpassword"];
 
 
 	$conn = new mysqli("localhost", "contactsadmin", 'sdf1GFDG@$g2g2GSDhgfhDehsdgh4thFGSDFshdf', "pcm");
@@ -30,10 +31,15 @@
 		else
 		{
 			$stmt->close();
+			
+			if (strcmp($password, $confirmpassword != 0))
+			{
+				returnWithError("Passwords do not match");
+			}
 
 			if (strlen($password) < 8)
 			{
-				returnWithError("Password length is not at least 11 characters long");
+				returnWithError("Password length is not at least 8 characters long");
 			}
 			else if (!preg_match('/[A-Z]/', $password))
 			{

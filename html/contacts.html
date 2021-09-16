@@ -45,29 +45,29 @@
 
                     <form class="form-vertical mt-5" action="" method="post">
 
-                        <div class="form-outline mb-4">
-                            <input type="text" id="firstName" class="form-control autocomplete"/>
-                            <label class="form-label">* First Name</label>
+                        <div class="form-outline mb-3">
+                            <input type="text" id="firstName" class="form-control form-control-lg autocomplete"/>
+                            <label class="form-label text-muted">* First Name</label>
                         </div>
 
-                        <div class="form-outline mb-4">
-                            <input type="text" id="lastName" class="form-control autocomplete"/>
-                            <label class="form-label">* Last Name</label>
+                        <div class="form-outline mb-3">
+                            <input type="text" id="lastName" class="form-control form-control-lg autocomplete"/>
+                            <label class="form-label text-muted">* Last Name</label>
                         </div>
 
-                        <div class="form-outline mb-4">
-                            <input type="text" id="emailAddress" class="form-control autocomplete"/>
-                            <label class="form-label">* Email Address</label>
+                        <div class="form-outline mb-3">
+                            <input type="text" id="emailAddress" class="form-control form-control-lg autocomplete"/>
+                            <label class="form-label text-muted">* Email Address</label>
                         </div>
 
-                        <div class="form-outline mb-4">
-                            <input type="text" id="phoneNumber" class="form-control"/>
-                            <label class="form-label">Phone Number</label>
+                        <div class="form-outline mb-3">
+                            <input type="text" id="phoneNumber" class="form-control form-control-lg"/>
+                            <label class="form-label text-muted">Phone Number</label>
                         </div>
 
-                        <div class="form-outline mb-4">
-                            <input type="text" id="creationDate" class="form-control"/>
-                            <label class="form-label">Date Created</label>
+                        <div class="form-outline mb-3">
+                            <input type="text" id="creationDate" class="form-control text-center"/>
+                            <label class="form-label text-muted">Date Created</label>
                         </div>
 
                         <div>
@@ -75,6 +75,7 @@
                                 <button id="createButton" type="button" class="btn btn-primary btn-block">Create</button>
                                 <button id="updateButton" type="button" class="btn btn-primary btn-block">Update</button>
                                 <button id="deleteButton" type="button" class="btn btn-primary btn-block">Delete</button>
+                                <button id="clearButton" type="button" class="btn btn-secondary btn-block">Clear</button>
                             </div>
                         </div>
 
@@ -97,12 +98,19 @@
                     var param = searchParams.get("userFullName")
                 }
 
-                var contacts = GetContactsForUser(userId);
+                // var contacts = GetContactsForUser(userId);
 
                 $("#labelUserName" ).attr('disabled', 'disabled');
                 $("#creationDate" ).attr('disabled', 'disabled');
-
                 $("#labelUserName").val("Welcome:  " + param);
+
+                // This event capture when user types the third character
+                $(".autocomplete").on('keyup', function(e) {
+                    var val = $(this).val();
+                    if( val.length % 3 == 0 ) {
+                        GetContactsForUser(userId, $(this).attr("id"), val);
+                    }
+                });
 
 
                 $("#exitButton").click( function() {
@@ -128,67 +136,89 @@
                 });
 
                 $("#updateButton").click( function() {
-                    var firstName = $("#firstName").val();
-                    var lastName = $("#lastName").val();
-                    var emailAddress = $("#emailAddress").val();
-                    var phoneNumber = $("#phoneNumber").val();
-                    var endPoint = "http://pcm.sudonet.cc/LAMPAPI/addContact.php";
-
-                    $("#errorMessage").text("This Function is not implemented yet");
                 });
 
                 $("#deleteButton").click( function() {
-                    var firstName = $("#firstName").val();
-                    var lastName = $("#lastName").val();
-                    var emailAddress = $("#emailAddress").val();
-                    var phoneNumber = $("#phoneNumber").val();
-                    var endPoint = "http://pcm.sudonet.cc/LAMPAPI/addContact.php";
-
-                    $("#errorMessage").text("This Function is not implemented yet");
                 });
+
+                $("#clearButton").click( function() {
+                    $("input:enabled").val("");
+                    $("#creationDate").val("");
+                    $("#createButton").prop("disabled",false);
+                })
 
             });
 
-            function GetContactsForUser( userId ) {
+            function GetContactsForUser( userId, fieldName, inputValue ) {
                 var endPoint = "http://pcm.sudonet.cc/LAMPAPI/searchContacts.php";
                 var request = $.ajax({
                     method: "POST",
                     url: endPoint,
                     data: JSON.stringify({
-                        userId: userId
+                        userId: userId,
+                        fieldName: inputValue
                     })
                 })
                 .done(function( response ) {
                     var fullName_array = {};
                     var email_array = {};
-                    var data = response;
-                    if ( !data.error ) {
-                        var contactId = [];
-                        var contactFirstName = [];
+                    if ( !response.error ) {
+                        var contacts = [];
                         var contactFullName = [];
                         var contactEmail = [];
-                        $.each(data.results, function( index, value ) {
+                        var idSelected;
+                        $.each(response.results, function( index, value ) {
                             var contact = value.split(" : ");
-                            contactId.push(contact[0]);
+                            contacts[contact[0]] = new Array (contact[1], contact[2], contact[3], contact[4], contact[5]);
                             contactFullName.push(contact[1] + " " + contact[2]);
                             contactEmail.push(contact[3]);
                             fullName_array[contact[1] + " " + contact[2]] = contact[0];
                             email_array[contact[3]] = contact[0];
                         });
-                        $(".autocomplete").autocomplete({
+                        $(".autocomplete#firstName").autocomplete({
                             source: contactFullName,
                             minLength: 3,
                             select: function(event, ui) {
-                                console.log("ContactId: " + fullName_array[ui.item.value]);
+                                idSelected = fullName_array[ui.item.value];
+                                if (ui.item && ui.item.value){
+                                    ui.item.value = contacts[idSelected][0];
+                                }
+                                $("#lastName").val(contacts[idSelected][1]);
+                                $("#emailAddress").val(contacts[idSelected][2]);
+                                $("#phoneNumber").val(contacts[idSelected][3]);
+                                $("#creationDate").val(contacts[idSelected][4]);
+                                $("#createButton").prop("disabled",true);
+                            }
+                        });
+                        $(".autocomplete#lastName").autocomplete({
+                            source: contactFullName,
+                            minLength: 3,
+                            select: function(event, ui) {
+                                idSelected = fullName_array[ui.item.value];
+                                if (ui.item && ui.item.value){
+                                    ui.item.value = contacts[idSelected][1];
+                                }
+                                $("#firstName").val(contacts[idSelected][0]);
+                                $("#emailAddress").val(contacts[idSelected][2]);
+                                $("#phoneNumber").val(contacts[idSelected][3]);
+                                $("#creationDate").val(contacts[idSelected][4]);
+                                $("#createButton").prop("disabled",true);
                             }
                         });
                         $(".autocomplete#emailAddress").autocomplete({
                             source: contactEmail,
                             minLength: 3,
                             select: function(event, ui) {
-                                console.log("ContactId: " + email_array[ui.item.value]);
+                                idSelected = email_array[ui.item.value];
+                                $("#firstName").val(contacts[idSelected][0]);
+                                $("#lastName").val(contacts[idSelected][1]);
+                                $("#emailAddress").val(contacts[idSelected][2]);
+                                $("#phoneNumber").val(contacts[idSelected][3]);
+                                $("#creationDate").val(contacts[idSelected][4]);
+                                $("#createButton").prop("disabled",true);
                             }
                         });
+
                     } else {
                         $("#errorMessage").text(data.error);
                     };

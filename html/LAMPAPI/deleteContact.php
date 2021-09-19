@@ -22,7 +22,7 @@
 
 		$result = $stmt->get_result();
 
-		if ($result->num_rows == 0)
+		if ($conn->affected_rows == 0)
 		{
 			returnWithError("Contact doesn't exist.");
 			$stmt->close();
@@ -32,25 +32,24 @@
 		{
 			$stmt->close();
 
-			$stmt = $conn->prepare("DELETE FROM Contacts WHERE UserId = ? AND ContactsId = ?");
-			$stmt->bind_param("ii", $userId, $contactId);
+			$stmt = $conn->prepare("DELETE FROM Contacts WHERE ContactsId = ?");
+			$stmt->bind_param("i", $contactId);
 			$stmt->execute();
 			
 			$result = $stmt->get_result();
 			
-			if ($row = $result->fetch_assoc())
+			if ($conn->affected_rows > 0)
 			{
-				returnWithError("Contact wasn't deleted.");
-				$stmt->close();
+				returnWithError("");
 			}
 			
 			else
 			{
-				$stmt->close();
-				$conn->close();
-				returnWithError("");
+				returnWithError("Contact wasn't deleted.");
 			}
+			$stmt->close();
 		}
+		$conn->close();
 
 	}
 
@@ -62,13 +61,13 @@
 
 	function sendResultInfoAsJson($obj)
 	{
-		header('Content-type: applicatiojson');
+		header('Content-type: application/json');
 		echo $obj;
 	}
 
 	function returnWithError($err)
 	{
-		$retValue = '{error":"' . $err . '"}';
+		$retValue = '{"error":"' . $err . '"}';
 		sendResultInfoAsJson($retValue);
 	}
 

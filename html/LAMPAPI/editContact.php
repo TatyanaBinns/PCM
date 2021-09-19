@@ -2,7 +2,7 @@
 	$inData = getRequestInfo();
 
 	$userId = $inData["userId"];
-	$contactId = $inData["contactId"];
+	$contactsId = $inData["contactsId"];
 	$firstname = $inData["firstname"];
 	$lastname = $inData["lastname"];
 	$email = $inData["email"];
@@ -15,8 +15,8 @@
 
 	else
 	{
-		$stmt = $conn->prepare("SELECT FROM Contacts (UserId,ContactId) VALUES(?,?)");
-		$stmt->bind_param("ii", $userId, $contactId);
+		$stmt = $conn->prepare("SELECT UserId, ContactsId FROM Contacts WHERE UserId = ? AND ContactsId = ?");
+		$stmt->bind_param("ii", $userId, $contactsId);
 		$stmt->execute();
 
 		$result = $stmt->get_result();
@@ -25,7 +25,7 @@
 		{
 			$stmt->close();
 
-			$stmt = $conn->prepare("UPDATE Contacts SET (FirstName,LastName,Email) VALUES (?,?,?) WHERE UserId = " . $userId . " and contactId = " . $contactId . "";
+			$stmt = $conn->prepare("UPDATE Contacts SET (FirstName,LastName,Email) VALUES (?,?,?) WHERE UserId = " . $userId . " and contactId = " . $contactsId . "";
 			$stmt->bind_param("sss", $firstname, $lastname, $email);
 			$stmt->execute();
 			$stmt->close();

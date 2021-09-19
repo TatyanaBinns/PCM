@@ -25,13 +25,13 @@
         </style>
     </head>
 
-    <body class="vh-100">
+    <body class="vh-100" style="background-color:#cae4e1">
 
         <div class="container-fluid h-custom">
             <div class="row d-flex justify-content-center align-items-center h-100">
 
                 <div class="col-md-9 col-lg-6 col-xl-5 justify-content-center">
-                    <img src="images/ucf-logo-square3.png" class="rounded mx-auto d-block">
+                    <img src="images/PCM-logo.png" class="rounded mx-auto d-block">
                 </div>
 
                 <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
@@ -77,6 +77,8 @@
 
             $(document).ready(function() {
 
+                Clean_Parameters();
+
                 $("#submitButton").focusout( function() {
                     $("#errorMessage").text("");
                 });
@@ -90,14 +92,18 @@
                     // When you add both login and password, it requests API. Else, it will show an error message.
                     // This validates if login and password have content.
                     if (userName && userPass) {
-                        requestAPI(endPoint, userName, userPass );
+                        RequestLogin(endPoint, userName, userPass );
                     } else {
                         $("#errorMessage").text("Please enter Email and Password");
                     };
-                })
+                });
+
+                $("#signupButton").click( function() {
+                    location.href = "frontend.html";
+                });
             });
 
-            function requestAPI( endPoint, userName, userPass ) {
+            function RequestLogin( endPoint, userName, userPass ) {
                 var request = $.ajax({
                     method: "POST",
                     url: endPoint,
@@ -106,13 +112,17 @@
                 .done(function( response ) {
                     var data = response;
                     if (data.id > 0 ) {
-                        var fullUserName = data.firstName + " " + data.lastName;
-                        $("#errorMessage").text( "Welcome: " + fullUserName);
                         $("#loginName").val("");
                         $("#userPassword").val("");
 
+                        localStorage.userId = data.id;
+                        localStorage.userName = userName;
+                        localStorage.userPass = userPass;
+                        localStorage.firstName = data.firstName;
+                        localStorage.lastName = data.lastName;
+
                         //Launches Welcome Contacts Page
-                        location.href = "contacts.html?userId=" + data.id + "&userFullName=" + encodeURI(fullUserName);
+                        location.href = "contacts.html";
                     } else {
                         $("#errorMessage").text(data.error);
                     };
@@ -122,6 +132,14 @@
                 })
                 .always(function() {
                 });
+            }
+
+            function Clean_Parameters() {
+                localStorage.userId = 0;
+                localStorage.userName = "";
+                localStorage.userPass = "";
+                localStorage.firstName = "";
+                localStorage.lastName = "";
             }
 
         </script>

@@ -21,12 +21,6 @@
 
 		$result = $stmt->get_result();
 
-		if ($result->num_rows == 0)
-		{
-			returnWithError("Contact doesn't exist.");
-			$stmt->close();
-		}
-
 		else
 		{
 			$stmt->close();
@@ -47,14 +41,14 @@
 
 	function sendResultInfoAsJson($obj)
 	{
-		header('Content-type: applicationjson');
+		header('Content-type: application/json');
 		echo $obj;
 	}
 
 	function returnWithError($err)
 	{
-		$retValue = 'error":"' . $err . '"}';
-		sendResultInfoAsJson($retValue);
+		$retValue = '{"error":"' . $err . '"}';
+		sendResultInfoAsJson( $retValue );
 	}
 	
 ?>

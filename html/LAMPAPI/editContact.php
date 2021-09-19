@@ -6,6 +6,7 @@
 	$firstname = $inData["firstname"];
 	$lastname = $inData["lastname"];
 	$email = $inData["email"];
+	$phonenum = $inData["phonenumber"];
 
 	$conn = new mysqli("localhost", "contactsadmin", 'sdf1GFDG@$g2g2GSDhgfhDehsdgh4thFGSDFshdf', "pcm");
 	if ($conn->connect_error)

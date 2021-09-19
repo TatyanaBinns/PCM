@@ -15,23 +15,12 @@
 
 	else
 	{
-		$stmt = $conn->prepare("SELECT UserId, ContactsId FROM Contacts WHERE UserId = ? AND ContactsId = ?");
-		$stmt->bind_param("ii", $userId, $contactsId);
+		$stmt = $conn->prepare("UPDATE Contacts SET NameFirst=?, NameLast=?, Email=?, PhoneNumber=? WHERE UserId=? AND ContactsId=?");
+		$stmt->bind_param("ssssii", $firstname, $lastname, $email, $phonenum, $userId, $contactsId);
 		$stmt->execute();
-
-		$result = $stmt->get_result();
-
-		else
-		{
-			$stmt->close();
-
-			$stmt = $conn->prepare("UPDATE Contacts SET (FirstName,LastName,Email) VALUES (?,?,?) WHERE UserId = " . $userId . " and contactId = " . $contactsId . "";
-			$stmt->bind_param("sss", $firstname, $lastname, $email);
-			$stmt->execute();
-			$stmt->close();
-			$conn->close();
-			returnWithError("");
-		}
+		$stmt->close();
+		$conn->close();
+		returnWithError("");
 	}
 
 	function getRequestInfo()

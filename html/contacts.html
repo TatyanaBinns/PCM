@@ -28,14 +28,14 @@
         </style>
     </head>
 
-    <body class="vh-100">
+    <body class="vh-100" style="background-color:#cae4e1">
         <div class="container-fluid h-custom">
             <div class="row d-flex justify-content-center align-items-center h-100">
                 <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
 
                     <div class="input-group mb-3">
                         <div class="input-group-append">
-                            <button id="profileButton"  class="btn btn-outline-secondary" type="button">Profile</button>
+                            <button id="profileButton"  class="btn btn-outline-secondary" type="button">Settings</button>
                         </div>
                         <input id="labelUserName" type="text" class="form-control text-center" placeholder="Welcome: " aria-label="Recipient's username" aria-describedby="basic-addon2">
                         <div class="input-group-append">
@@ -46,22 +46,22 @@
                     <form class="form-vertical mt-5" action="" method="post">
 
                         <div class="form-outline mb-3">
-                            <input type="text" id="firstName" class="form-control form-control-lg autocomplete"/>
+                            <input type="text" id="firstname" class="form-control autocomplete"/>
                             <label class="form-label text-muted">* First Name</label>
                         </div>
 
                         <div class="form-outline mb-3">
-                            <input type="text" id="lastName" class="form-control form-control-lg autocomplete"/>
+                            <input type="text" id="lastname" class="form-control autocomplete"/>
                             <label class="form-label text-muted">* Last Name</label>
                         </div>
 
                         <div class="form-outline mb-3">
-                            <input type="text" id="emailAddress" class="form-control form-control-lg autocomplete"/>
+                            <input type="text" id="email" class="form-control autocomplete"/>
                             <label class="form-label text-muted">* Email Address</label>
                         </div>
 
                         <div class="form-outline mb-3">
-                            <input type="text" id="phoneNumber" class="form-control form-control-lg"/>
+                            <input type="text" id="phoneNumber" class="form-control"/>
                             <label class="form-label text-muted">Phone Number</label>
                         </div>
 
@@ -89,29 +89,36 @@
         </div>
 
         <script>
+
+            var contactIdSelected;
+
             $(document).ready(function() {
 
+                $("#firstname").focus();
+
                 //Gets parameters from the URL
-                var searchParams = new URLSearchParams(window.location.search);
-                if (searchParams.has("userId")) {
-                    var userId = searchParams.get("userId")
-                    var param = searchParams.get("userFullName")
-                }
+
+                var userId = localStorage.userId;
+                var userFirstName = localStorage.firstName;
+                var userLastName = localStorage.lastName;
 
                 // var contacts = GetContactsForUser(userId);
 
                 $("#labelUserName" ).attr('disabled', 'disabled');
                 $("#creationDate" ).attr('disabled', 'disabled');
-                $("#labelUserName").val("Welcome:  " + param);
+                $("#labelUserName").val("Welcome:  " + userFirstName + " " + userLastName);
 
                 // This event capture when user types the third character
                 $(".autocomplete").on('keyup', function(e) {
                     var val = $(this).val();
                     if( val.length % 3 == 0 ) {
-                        GetContactsForUser(userId, $(this).attr("id"), val);
+                        Request_Search_Contact(userId, $(this).attr("id"), val);
                     }
                 });
 
+                $("#profileButton").click( function() {
+                    location.href = "settings.html";
+                });
 
                 $("#exitButton").click( function() {
                     location.href ="index.html";
@@ -122,23 +129,30 @@
                 });
 
                 $("#createButton").click( function() {
-                    var firstName = $("#firstName").val();
-                    var lastName = $("#lastName").val();
-                    var emailAddress = $("#emailAddress").val();
+                    var firstName = $("#firstname").val();
+                    var lastName = $("#lastname").val();
+                    var emailAddress = $("#email").val();
                     var phoneNumber = $("#phoneNumber").val();
 
                     if ( firstName && lastName && emailAddress ) {
-                        requestAPI( userId, firstName, lastName, emailAddress, phoneNumber );
+                        Request_Add_Contact( userId, firstName, lastName, emailAddress, phoneNumber );
                     } else {
                         $("#errorMessage").text("More Information Required !");
                     };
-                    // $("#deleteButton").prop("disabled",true);
                 });
 
                 $("#updateButton").click( function() {
+                    var firstName = $("#firstname").val();
+                    var lastName = $("#lastname").val();
+                    var email = $("#email").val();
+                    var phoneNumber = $("#phoneNumber").val();
+                    Request_Update_Contact( userId, contactIdSelected, firstName, lastName, email, phoneNumber);
                 });
 
                 $("#deleteButton").click( function() {
+                    if (confirm("Are you sure to delete this Contact?")) {
+                        Request_Delete_Contact( contactIdSelected, userId );
+                    };
                 });
 
                 $("#clearButton").click( function() {
@@ -149,7 +163,7 @@
 
             });
 
-            function GetContactsForUser( userId, fieldName, inputValue ) {
+            function Request_Search_Contact( userId, fieldName, inputValue ) {
                 var endPoint = "http://pcm.sudonet.cc/LAMPAPI/searchContacts.php";
                 var request = $.ajax({
                     method: "POST",
@@ -175,47 +189,50 @@
                             fullName_array[contact[1] + " " + contact[2]] = contact[0];
                             email_array[contact[3]] = contact[0];
                         });
-                        $(".autocomplete#firstName").autocomplete({
+                        $(".autocomplete#firstname").autocomplete({
                             source: contactFullName,
                             minLength: 3,
                             select: function(event, ui) {
                                 idSelected = fullName_array[ui.item.value];
+                                contactIdSelected = idSelected;
                                 if (ui.item && ui.item.value){
                                     ui.item.value = contacts[idSelected][0];
                                 }
-                                $("#lastName").val(contacts[idSelected][1]);
-                                $("#emailAddress").val(contacts[idSelected][2]);
+                                $("#lastname").val(contacts[idSelected][1]);
+                                $("#email").val(contacts[idSelected][2]);
                                 $("#phoneNumber").val(contacts[idSelected][3]);
                                 $("#creationDate").val(contacts[idSelected][4]);
-                                $("#createButton").prop("disabled",true);
+                                $("#createButton").prop("disabled", true);
                             }
                         });
-                        $(".autocomplete#lastName").autocomplete({
+                        $(".autocomplete#lastname").autocomplete({
                             source: contactFullName,
                             minLength: 3,
                             select: function(event, ui) {
                                 idSelected = fullName_array[ui.item.value];
+                                contactIdSelected = idSelected;
                                 if (ui.item && ui.item.value){
                                     ui.item.value = contacts[idSelected][1];
                                 }
-                                $("#firstName").val(contacts[idSelected][0]);
-                                $("#emailAddress").val(contacts[idSelected][2]);
+                                $("#firstname").val(contacts[idSelected][0]);
+                                $("#email").val(contacts[idSelected][2]);
                                 $("#phoneNumber").val(contacts[idSelected][3]);
                                 $("#creationDate").val(contacts[idSelected][4]);
-                                $("#createButton").prop("disabled",true);
+                                $("#createButton").prop("disabled", true);
                             }
                         });
-                        $(".autocomplete#emailAddress").autocomplete({
+                        $(".autocomplete#email").autocomplete({
                             source: contactEmail,
                             minLength: 3,
                             select: function(event, ui) {
                                 idSelected = email_array[ui.item.value];
-                                $("#firstName").val(contacts[idSelected][0]);
-                                $("#lastName").val(contacts[idSelected][1]);
-                                $("#emailAddress").val(contacts[idSelected][2]);
+                                contactIdSelected = idSelected;
+                                $("#firstname").val(contacts[idSelected][0]);
+                                $("#lastname").val(contacts[idSelected][1]);
+                                $("#email").val(contacts[idSelected][2]);
                                 $("#phoneNumber").val(contacts[idSelected][3]);
                                 $("#creationDate").val(contacts[idSelected][4]);
-                                $("#createButton").prop("disabled",true);
+                                $("#createButton").prop("disabled", true);
                             }
                         });
 
@@ -230,7 +247,7 @@
                 });
             }
 
-            function requestAPI( userId, firstName, lastName, emailAddress, phoneNumber ) {
+            function Request_Add_Contact( userId, firstName, lastName, emailAddress, phoneNumber ) {
                 var endPoint = "http://pcm.sudonet.cc/LAMPAPI/addContact.php";
                 var request = $.ajax({
                     method: "POST",
@@ -248,6 +265,65 @@
                     if ( !data.error ) {
                         $("#errorMessage").text( "Contact created successfully.");
                         $("input:enabled").val("");
+                    } else {
+                        $("#errorMessage").text(data.error);
+                    };
+                })
+                .fail(function(e) {
+                    $("#errorMessage").text("Communication " + e.statusText + " !");
+                })
+                .always(function() {
+                });
+            }
+
+            function Request_Update_Contact( userId, contactId, firstName, lastName, email, phoneNumber ) {
+                var endPoint = "http://pcm.sudonet.cc/LAMPAPI/editContact.php";
+                var request = $.ajax({
+                    method: "POST",
+                    url: endPoint,
+                    data: JSON.stringify({
+                        userId: userId,
+                        contactId: contactId,
+                        firstname: firstName,
+                        lastname: lastName,
+                        email: email,
+                        phonenumber: phoneNumber
+                    })
+                })
+                .done(function( response ) {
+                    if ( !response.error ) {
+                        $("#errorMessage").text( "Contact updated successfully.");
+                        $("input:enabled").val("");
+                        $("#createButton").prop("disabled",false);
+                    } else {
+                        $("#errorMessage").text(data.error);
+                    };
+                })
+                .fail(function(e) {
+                    $("#errorMessage").text("Communication " + e.statusText + " !");
+                })
+                .always(function() {
+                });
+            }
+
+
+            function Request_Delete_Contact( contactId, userId ) {
+                var endPoint = "http://pcm.sudonet.cc/LAMPAPI/deleteContact.php";
+                var request = $.ajax({
+                    method: "POST",
+                    url: endPoint,
+                    data: JSON.stringify({
+                        userId: userId,
+                        contactId: contactId
+                    })
+                })
+                .done(function( response ) {
+                    var data = response;
+                    if ( !data.error ) {
+                        $("#errorMessage").text( "Contact Deleted successfully.");
+                        $("input:enabled").val("");
+                        $("#createButton").prop("disabled", false);
+                        contactIdSelected = 0;
                     } else {
                         $("#errorMessage").text(data.error);
                     };

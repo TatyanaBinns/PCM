@@ -3,7 +3,7 @@
 	$inData = getRequestInfo();
 
 	$userId = $inData["userId"];
-	$contactId = $inData["contactId"];
+	$contactsId = $inData["contactsId"];
 
 	// Create connection
 	$conn = new mysqli("localhost", "contactsadmin", 
@@ -16,8 +16,9 @@
 
 	else
 	{
-		$stmt = $conn->prepare("SELECT FROM Contacts (UserId,ContactId) VALUES(?,?)");
-		$stmt->bind_param("ii", $userId, $contactId);
+		// $stmt = $conn->prepare("SELECT FROM Contacts (UserId,ContactId) VALUES(?,?)");
+		$stmt = $conn->prepare("SELECT UserId, ContactsId FROM Contacts WHERE UserId = ? AND ContactsId = ?");
+		$stmt->bind_param("ii", $userId, $contactsId);
 		$stmt->execute();
 
 		$result = $stmt->get_result();
@@ -32,7 +33,7 @@
 		{
 			$stmt->close();
 
-			$stmt = $conn->prepare("DELETE FROM Contacts (UserId,ContactId) VALUES(?,?)");
+			$stmt = $conn->prepare("DELETE FROM Contacts WHERE UserId = ? AND ContactsId = ?");
 			$stmt->bind_param("ii", $userId, $contactId);
 			$stmt->execute();
 			

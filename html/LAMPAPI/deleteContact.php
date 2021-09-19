@@ -16,7 +16,6 @@
 
 	else
 	{
-		// $stmt = $conn->prepare("SELECT FROM Contacts (UserId,ContactId) VALUES(?,?)");
 		$stmt = $conn->prepare("SELECT UserId, ContactsId FROM Contacts WHERE UserId = ? AND ContactsId = ?");
 		$stmt->bind_param("ii", $userId, $contactsId);
 		$stmt->execute();

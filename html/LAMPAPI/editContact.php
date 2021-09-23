@@ -21,7 +21,13 @@
 		$stmt->execute();
 		$stmt->close();
 		$conn->close();
-		returnWithError("");
+		if ($conn->affected_rows > 0)
+		{
+			returnWithError("");
+		}
+		else {
+			returnWithError("Contact doesn't exist.");
+		}
 	}
 
 	function getRequestInfo()

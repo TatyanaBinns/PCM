@@ -19,8 +19,7 @@
 		$stmt = $conn->prepare("UPDATE Contacts SET NameFirst=?, NameLast=?, Email=?, PhoneNumber=? WHERE UserId=? AND ContactsId=?");
 		$stmt->bind_param("ssssii", $firstname, $lastname, $email, $phonenum, $userId, $contactId);
 		$stmt->execute();
-		$stmt->close();
-		$conn->close();
+
 		if ($conn->affected_rows > 0)
 		{
 			returnWithError("");
@@ -28,6 +27,8 @@
 		else {
 			returnWithError("Contact doesn't exist.");
 		}
+		$stmt->close();
+		$conn->close();
 	}
 
 	function getRequestInfo()

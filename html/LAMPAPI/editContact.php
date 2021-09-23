@@ -2,7 +2,7 @@
 	$inData = getRequestInfo();
 
 	$userId = $inData["userId"];
-	$contactsId = $inData["contactsId"];
+	$contactId = $inData["contactId"];
 	$firstname = $inData["firstname"];
 	$lastname = $inData["lastname"];
 	$email = $inData["email"];
@@ -17,7 +17,7 @@
 	else
 	{
 		$stmt = $conn->prepare("UPDATE Contacts SET NameFirst=?, NameLast=?, Email=?, PhoneNumber=? WHERE UserId=? AND ContactsId=?");
-		$stmt->bind_param("ssssii", $firstname, $lastname, $email, $phonenum, $userId, $contactsId);
+		$stmt->bind_param("ssssii", $firstname, $lastname, $email, $phonenum, $userId, $contactId);
 		$stmt->execute();
 		$stmt->close();
 		$conn->close();
@@ -38,7 +38,7 @@
 	function returnWithError($err)
 	{
 		$retValue = '{"error":"' . $err . '"}';
-		sendResultInfoAsJson( $retValue );
+		sendResultInfoAsJson($retValue);
 	}
-	
+
 ?>

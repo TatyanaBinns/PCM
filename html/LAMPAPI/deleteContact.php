@@ -1,12 +1,12 @@
 <?php
-	
+
 	$inData = getRequestInfo();
 
 	$userId = $inData["userId"];
-	$contactsId = $inData["contactsId"];
+	$contactId = $inData["contactId"];
 
 	// Create connection
-	$conn = new mysqli("localhost", "contactsadmin", 
+	$conn = new mysqli("localhost", "contactsadmin",
 		'sdf1GFDG@$g2g2GSDhgfhDehsdgh4thFGSDFshdf', "pcm");
 
 	if ($conn->connect_error)
@@ -16,41 +16,20 @@
 
 	else
 	{
-		$stmt = $conn->prepare("SELECT UserId, ContactsId FROM Contacts WHERE UserId = ? AND ContactsId = ?");
-		$stmt->bind_param("ii", $userId, $contactsId);
+		$stmt = $conn->prepare("DELETE FROM Contacts WHERE ContactsId=?");
+		$stmt->bind_param("i", $contactId);
 		$stmt->execute();
 
-		$result = $stmt->get_result();
-
-		if ($conn->affected_rows == 0)
+		if ($conn->affected_rows > 0)
 		{
-			returnWithError("Contact doesn't exist.");
-			$stmt->close();
+			returnWithError("");
 		}
-
 		else
 		{
-			$stmt->close();
-
-			$stmt = $conn->prepare("DELETE FROM Contacts WHERE ContactsId = ?");
-			$stmt->bind_param("i", $contactId);
-			$stmt->execute();
-			
-			$result = $stmt->get_result();
-			
-			if ($conn->affected_rows > 0)
-			{
-				returnWithError("");
-			}
-			
-			else
-			{
-				returnWithError("Contact wasn't deleted.");
-			}
-			$stmt->close();
+			returnWithError("Contact wasn't deleted.");
 		}
+		$stmt->close();
 		$conn->close();
-
 	}
 
 	function getRequestInfo()
@@ -70,6 +49,4 @@
 		$retValue = '{"error":"' . $err . '"}';
 		sendResultInfoAsJson($retValue);
 	}
-
-
 ?>

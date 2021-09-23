@@ -31,13 +31,12 @@
 		else
 		{
 			$stmt->close();
-			
-			if (strcmp($password, $confirmpassword != 0))
+
+			if (strcmp($password, $confirmpassword) != 0)
 			{
 				returnWithError("Passwords do not match");
 			}
-
-			if (strlen($password) < 8)
+			else if (strlen($password) < 8)
 			{
 				returnWithError("Password length is not at least 8 characters long");
 			}

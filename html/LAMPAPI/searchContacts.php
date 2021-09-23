@@ -12,9 +12,12 @@
 	}
 	else
 	{
-		$stmt = $conn->prepare("SELECT NameFirst, NameLast, Email, PhoneNumber, DateCreated FROM Contacts WHERE NameFirst LIKE ? and UserId=?");
-		$firstName = "%" . $inData["searchfirstname"] . "%";
-		$stmt->bind_param("ss", $firstName, $inData["userId"]);
+		$stmt = $conn->prepare("SELECT ContactsId, NameFirst, NameLast, Email, PhoneNumber, DateCreated FROM Contacts WHERE UserId = ? AND NameFirst LIKE ? AND NameLast LIKE ? AND Email LIKE ? AND PhoneNumber LIKE ?");
+		$firstname = "%" . $inData["firstname"] . "%";
+		$lastname = "%" . $inData["lastname"] . "%";
+		$email = "%" . $inData["email"] . "%";
+		$phonenum = "%" . $inData["phonenumber"] . "%";
+		$stmt->bind_param("issss", $inData["userId"], $firstname, $lastname, $email, $phonenum);
 		$stmt->execute();
 
 		$result = $stmt->get_result();
@@ -26,7 +29,7 @@
 				$searchResults .= ",";
 			}
 			$searchCount++;
-			$searchResults .= '"' . $row["NameFirst"] . "," . $row["NameLast"] . "," . $row["Email"] . "," . $row["PhoneNumber"] . "," . $row["DateCreated"] . '"';
+			$searchResults .= '"' . $row["ContactsId"] . " : " . $row["NameFirst"] . " : " . $row["NameLast"] . " : " . $row["Email"] . " : " . $row["PhoneNumber"] . " : " . $row["DateCreated"] . '"';
 		}
 
 		if( $searchCount == 0 )

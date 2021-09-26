@@ -29,7 +29,7 @@
 				$searchResults .= ",";
 			}
 			$searchCount++;
-			$searchResults .= '"' . $row["ContactsId"] . " : " . $row["NameFirst"] . " : " . $row["NameLast"] . " : " . $row["Email"] . " : " . $row["PhoneNumber"] . " : " . $row["DateCreated"] . '"';
+			$searchResults .= '"' . $row["ContactsId"] . " : " . $row["NameFirst"] . " : " . $row["NameLast"] . " : " . $row["Email"] . " : " . $row["PhoneNumber"] . " : " . substr($row["DateCreated"], 0, 10) . '"';
 		}
 
 		if( $searchCount == 0 )

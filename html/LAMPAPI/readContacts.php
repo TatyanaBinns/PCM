@@ -25,7 +25,16 @@
 				$searchResults .= ",";
 			}
 			$searchCount++;
-			$searchResults .= '"' . $row["ContactsId"] . " : " . $row["NameFirst"] . " : " . $row["NameLast"] . " : " . $row["Email"] . " : " . $row["PhoneNumber"] . " : " . $row["DateCreated"] . '"';
+
+			$searchContactId = $row["ContactsId"];
+			$searchFirst = $row["NameFirst"];
+			$searchLast = $row["NameLast"];
+			$searchEmail = $row["Email"];
+			$searchPhone = $row["PhoneNumber"];
+			$searchDate = $row["DateCreated"];
+
+			$searchResults .= '"' . $searchContactId . " : " . $searchFirst . " : " . $searchLast . " : " . $searchEmail . " : " . $searchPhone . " : " . $searchDate . '"';
+
 		}
 
 		if( $searchCount == 0 )

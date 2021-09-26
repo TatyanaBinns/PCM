@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Welcome Page</title>
+        <link rel="stylesheet" href="css/welmain.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="js/jquery-3.6.0.js" type="text/javascript" ></script>
+        <script src="js/jquery-3.6.0.min.js" type="text/javascript" ></script>
+        <script src="js/jquery-ui.js" type="text/javascript" ></script>
+        
+    </head>
+    <body>
+
+
+        <div class ="title_page">
+            <div class="dropdown">
+                <button class="btn", style="float: left"><i class="fa fa-bars"></i></button>
+                <div class="dropdown-content">
+                <a id = "homeid" href="welcome.html">Home</a>
+                <a id = "logoutid" href="index.html">Log Out</a>
+                </div>
+            </div>    
+
+            <div class ="settin"  style="float: right">
+                <button id="settin" type="button"><i style="font-size:24px"  class="fa" >&#xf013;</i></button>
+                
+            </div>
+
+        
+            <div class="PCM_title" style="margin: 0 auto; width: 100px;">PCM</div>
+        </div>
+    
+
+        <h1 id= "welcome_user" type="text"> Welcome: </h1>
+        
+        <div>
+            <button id="search" type="button" class ="search">Search</button>
+            <button id="add" type="button" class ="add">Add</button>
+        </div>
+        
+
+        <form>
+            <div class ="contact_info">
+                <input type="text" id="myInput" onkeyup="myFunction()" placeholder="First Name" title="Type in a name">
+                <input type="text" id="lasTname" placeholder="Last name" title="type your last name">
+                <input type="text" id="Phone" placeholder="Phone" title="type your last name">
+                <input type="text" id="Email" placeholder="Email" title="type your last name">
+                
+
+
+
+                <table id="myTable" class="myTable">
+                    <thead>
+                        <tr class="header">
+                            <th style="width:20%;">Name</th>
+                            <th style="width:20%;">Last Name</th>
+                            <th style="width:20%;">Phone</th>
+                            <th style="width:20%;">Email</th>
+                            <th style="width:20%;">Date Created</th>
+                            
+                            
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </form>
+        <script>
+            $(document).ready(function(){
+
+                $("#search").click( function() {
+                    location.href = "welcome.html";
+                });
+
+                $("#add").click( function() {
+                    location.href = "contacts.html";
+                });
+
+                $("#settin").click( function() {
+                    location.href = "settings.html";
+                });
+
+
+                var userId = localStorage.userId;
+                var user_f_name = localStorage.firstName;
+                var user_l_name = localStorage.lastName;
+
+                $("#welcome_user").val("Welcome: "+user_f_name+ " "+user_l_name +"!");
+                $.ajax({
+                    
+                    url : "http://pcm.sudonet.cc/LAMPAPI/readContacts.php",
+                    method: 'POST',
+                    dataType: 'json',
+                    sucess: function(data)
+                    {
+                        $("#myTable").dataTable
+                        ({
+                            data: data,
+                            columns : 
+                            [
+                                {'data': 'searchFirst'},
+                                {'data': 'searchLast'},
+                                {'data': 'email'},
+                                {
+                                    'data': 'phonenum',
+                                    'render' : function(phone_num)
+                                    {
+                                        // this will be modify to format phone number specifications (###) - ### - ####
+                                        return "phone:" + phone_num;
+                                    }
+                                },
+                                //missing date create --- create a function
+                                
+                            ]
+                        });
+                    }
+                });           
+            });
+
+        </script>
+    </body>
+</html>
+

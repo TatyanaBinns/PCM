@@ -67,11 +67,31 @@ h2
 	font-size: x-large;
 }
 
-input [type="firstname"], [type="email"], [type="password"], [type="firstname"], [type="lastname"]
+input [type="firstname"], [type="email"], [type="password"], [type="text"], [type="lastname"], [type="re_password"]
 {
 	width: 55%;
 	height: 25px;
 	font-size: medium;
 	
 	
+}
+
+.passwordmatch
+{
+	color: red;
+	font-size: small;
+	position:absolute;
+	
+
+}
+
+.requirements
+{
+	font-size: x-small;
+	position: absolute;
+	right: 148px;
+	top: 448px;
+	border-radius:8px;
+	
+	background: rgb(241, 241, 241);
 }

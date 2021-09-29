@@ -14,21 +14,9 @@
 
 	<body>
 
-		<div class ="requirements", id="requi" hidden>
-		<span> <b>Password must contain the following:</b></span>
-		<br/><br/>
-		<span id="letter" class="invalid">A <b>lowercase</b> letter</span>
-		<br/>
-		<span id="capital" class="invalid">A <b>capital (uppercase)</b> letter</span>
-		<br/>
-		<span id="number" class="invalid">A <b>Number</b></span>
-		<br/>
-		<span id="special" class="invalid">A <b>Special character</b></span>
-		<br/>
-		<span id="length" class="invalid">A <b>Minimum of 4 characters</b></span>
-		</div>
+		
 		<div class = "wrapper_form">
-
+		
 
 			<div class = "container_form">
 
@@ -76,28 +64,39 @@
 							<div class = "input_box"> <span> <i aria-hidden ="true" class = "lock"></i></span>
 								<label for="password"> Enter Password:</label>
 								<!-- password must contain 1 uppper case, 1 lower case, 1 special character, 1 digit -->
-								<input type="password" id="password" name = "password" placeholder = "Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{4,8}"
-								minlength="4" maxlength="8" required />
-								<br/>
-
+								<input type="password" id="password" name = "password" placeholder = "Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,15}" 
+								minlength="8" maxlength="15" required />								
+								
 
 							</div>
+							<div class ="requirements", id="requi" hidden >
+								<span><b>Password must contain the following:</b></span>
+								<br/><br/>
+								<span id="capital" class="invalid">A <b>capital (uppercase) letter</b></span>
+								<br/>
+								<span id="number" class="invalid">A <b>Number</b></span>
+								<br/>
+								<span id="special" class="invalid">A <b>Special character</b></span>
+								<br/>
+								<span id="length" class="invalid">A <b>Minimum of 8 characters</b></span>
+							</div>
+
+							
 							<br/><br/>
 
 							<div class = "input_box"> <span> <i aria-hidden ="true" class = "lock"></i></span>
 								<label for="password"> Re-Enter Password:</label>
 								<input type="password" id="reEnterPassword" name = "re_password" placeholder = "Password" required />
-
-
+								
 
 							</div>
+
 							<p class="passwordmatch" id = "password" style="left:185px;"> </p>
+
 							<br /><br /><br />
+
 							<input id="backToLoginButton" class="button" type="submit" value="Back to Login" />
-
 							<input id="registerButton" class="button" type="submit" value="Register"/>
-
-
 
 						</form>
 
@@ -112,35 +111,34 @@
 
 		<script>
 		$(document).ready(function() {
-
+				
 				$("#password").click( function(){
 					var passcode = $("#password").val();
-					var lowerCaseLetters = $("#lower").val();
-
+					
+					
 					if(passcode == '')
 					{
 						$("#requi").show();
 						$("#requi").delay("5000").fadeOut();
 
-
 					}
-
+					
 
 				});
-
+				
 				$("#reEnterPassword").keyup(function(){
 
 					var first_pass = $("#password").val();
 					var confirmation = $("#reEnterPassword").val();
 
-
+					
 					if(first_pass != confirmation)
 					{
 						$("#registerButton").hide();
 						$("p").text("Password does not match").css("color","red" );
 						$("p").delay("fast").fadeIn();
-
-
+						
+						
 
 					}
 
@@ -152,7 +150,7 @@
 						$("span").hide();
 
 					}
-
+					
 
 				});
 
@@ -168,11 +166,11 @@
 								$("#password").val(),
 								$("#reEnterPassword").val()
 						);
-
-
+										
+					
 				});
 
-
+				
 
 				$("button").focusout( function() {
 						$("#errorMessage").text("");
@@ -181,7 +179,7 @@
 		});
 
 		function Request_Register_User( firstName, lastName, email, password, confirmPassword ) {
-
+						
 				var endPoint = "http://pcm.sudonet.cc/LAMPAPI/registerUser.php";
 				var request = $.ajax({
 						method: "POST",
@@ -194,23 +192,23 @@
 								confirmpassword: confirmPassword
 						})
 
+						
 
-
-
-
+						
+						
 				})
 
 				.done(function( response ) {
 
 						if ( !response.error ) {
-
+							
 							$("#errorMessage").text( "User Created successfully.");
 							localStorage.userName = email;
-
+							
 							location.href = "index.html";
 						}
-
-
+												
+						
 						else {
 								$("#errorMessage").text(response.error);
 						};
@@ -222,9 +220,15 @@
 				});
 		}
 
+		function uppercase(str)
+		{
+			return(/[A-Z]/.test(str));
+		}
+
 		</script>
 
 
 	</body>
 
 </html>
+

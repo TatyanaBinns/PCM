@@ -2,26 +2,26 @@
 body
 {
 	font-family: Verdana, sans-serif;
-	
-	background:  #cae4e1;
+
+	background: #20b2aa;
 
 }
 
 .wrapper_form
 {
-	
+
 	background: white;
 	width: 500px;
 	padding: 40px;
 	margin: 5% auto 0;
 	position: relative;
-	
+
 	border-top: 30px solid #4d4d4d;
 	align-items: left;
 
 	font-size: large;
-	
-	
+
+
 }
 
 
@@ -36,9 +36,9 @@ label
 
 .image-size
 {
-	width: 200px; 
+	width: 200px;
 	height:200px;
-	
+
 
 }
 
@@ -47,23 +47,23 @@ label
 	height: auto;
 	width: 200px;
 	font-size: 20px;
-	background-color:#228b7d;
+	background-color:#4d4d4d;
 	color:white;
 	border-radius: 50px;
     transform: translate(25%, 25%);
-  		
+
 }
 
 .button:hover
 {
-	background-color:#13665b;
-	
-	
+	background-color:#393636;
+
+
 }
 
 h2
 {
-	
+
 	font-size: x-large;
 }
 
@@ -72,8 +72,8 @@ input [type="firstname"], [type="email"], [type="password"], [type="text"], [typ
 	width: 55%;
 	height: 25px;
 	font-size: medium;
-	
-	
+
+
 }
 
 .passwordmatch
@@ -81,17 +81,13 @@ input [type="firstname"], [type="email"], [type="password"], [type="text"], [typ
 	color: red;
 	font-size: small;
 	position:absolute;
-	
+
 
 }
 
 .requirements
 {
 	font-size: x-small;
-	position: absolute;
-	right: 148px;
-	top: 448px;
-	border-radius:8px;
+	transform: translate(29.3%, 5%);
 	
-	background: rgb(241, 241, 241);
 }

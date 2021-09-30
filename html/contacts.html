@@ -1,16 +1,15 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8" />
-        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+<html><head>
+        <meta charset="utf-8">
+        <meta content="width=device-width, initial-scale=1.0" name="viewport">
         <title>Login COP4331</title>
-        <script src="js/jquery-3.6.0.js" type="text/javascript" ></script>
-        <script src="js/jquery-ui.js" type="text/javascript" ></script>
-        <script src="js/bootstrap.js" type="text/javascript" ></script>
+        <script src="js/jquery-3.6.0.js" type="text/javascript"></script>
+        <script src="js/jquery-ui.js" type="text/javascript"></script>
+        <script src="js/bootstrap.js" type="text/javascript"></script>
         <link rel="icon" href="data:,">
-        <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-        <link href="css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css"/>
-        <link href="css/jquery-ui.css" rel="stylesheet" type="text/css"/>
+        <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
+        <link href="css/bootstrap-responsive.min.css" rel="stylesheet" type="text/css">
+        <link href="css/jquery-ui.css" rel="stylesheet" type="text/css">
 
         <style>
             .divider:after,
@@ -28,52 +27,52 @@
         </style>
     </head>
 
-    <body class="vh-100" style="background-color:#5DE3CF">
+    <body class="vh-100" style="background-color:rgba(32, 178, 170, .8)">
         <div class="container-fluid h-custom">
             <div class="row d-flex justify-content-center align-items-center h-100">
                 <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
 
                     <div class="input-group mt-1 mb-2">
                         <div class="input-group-append">
-                            <button id="profileButton"  class="btn btn-outline-secondary" type="button">Settings</button>
+                            <button id="profileButton" class="btn btn-secondary" type="button">Settings</button>
                         </div>
-                        <input id="labelUserName" type="text" class="form-control text-center" placeholder="Welcome: " aria-label="Recipient's username" aria-describedby="basic-addon2">
+                        <input id="labelUserName" type="text" class="form-control text-center" placeholder="Welcome: " aria-label="Recipient's username" aria-describedby="basic-addon2" disabled="disabled">
                         <div class="input-group-append">
-                            <button id="exitButton"  class="btn btn-outline-secondary" type="button">Return</button>
+                            <button id="exitButton" class="btn btn-secondary" type="button">Return</button>
                         </div>
                     </div>
 
                     <form class="form-vertical mt-5" action="" method="post">
 
                         <div class="form-outline mb-2">
-                            <input type="text" id="firstname" class="form-control autocomplete"/>
+                            <input type="text" id="firstname" class="form-control autocomplete">
                             <label class="form-label text-muted">* First Name</label>
                         </div>
 
                         <div class="form-outline mb-2">
-                            <input type="text" id="lastname" class="form-control autocomplete"/>
+                            <input type="text" id="lastname" class="form-control autocomplete">
                             <label class="form-label text-muted">* Last Name</label>
                         </div>
 
                         <div class="form-outline mb-2">
-                            <input type="email" id="email" class="form-control autocomplete"/>
+                            <input type="email" id="email" class="form-control autocomplete">
                             <label class="form-label text-muted">* Email Address</label>
                         </div>
 
                         <div class="form-outline mb-2">
-                            <input type="text" id="phoneNumber" class="form-control" placeholder="XXXXXXXXXX"/>
+                            <input type="text" id="phoneNumber" class="form-control" placeholder="XXXXXXXXXX">
                             <label class="form-label text-muted">Phone Number.  Write it as XXXXXXXXXX</label>
                         </div>
 
                         <div class="form-outline mb-3">
-                            <input type="text" id="creationDate" class="form-control text-center"/>
+                            <input type="text" id="creationDate" class="form-control text-center" disabled="disabled">
                             <label class="form-label text-muted">Date Created</label>
                         </div>
 
                         <div>
                             <div class="text-center text-lg-start mt-4 pt-2">
                                 <button id="createButton" type="button" class="btn btn-primary btn-block">Create</button>
-                                <button id="updateButton" type="button" class="btn btn-primary btn-block">Update</button>
+                                <button id="updateButton" type="button" class="btn btn-primary btn-block" disabled="">Update</button>
                                 <button id="deleteButton" type="button" class="btn btn-primary btn-block">Delete</button>
                                 <button id="clearButton" type="button" class="btn btn-secondary btn-block">Clear</button>
                             </div>
@@ -117,10 +116,7 @@
                 // when the contact email address was selected in welcome screen
                 if (contactId) {
                     contactIdSelected = contactId;
-                    var phone = contactPhone.replace("(", "");
-                    phone = phone.replace(")", "");
-                    phone = phone.replace(" ", "");
-                    phone = phone.replace("-", "");
+                    var phone = Clean_Phone_Number(contactPhone);
                     $("#firstname").val(contactFirstName);
                     $("#lastname").val(contactLastName);
                     $("#email").val(contactEmail);
@@ -230,7 +226,7 @@
                                 }
                                 $("#lastname").val(contacts[idSelected][1]);
                                 $("#email").val(contacts[idSelected][2]);
-                                $("#phoneNumber").val(contacts[idSelected][3]);
+                                $("#phoneNumber").val(Clean_Phone_Number(contacts[idSelected][3]));
                                 $("#creationDate").val(contacts[idSelected][4]);
                                 $("#createButton").prop("disabled", true);
                                 $("#updateButton").prop("disabled",false);
@@ -247,7 +243,7 @@
                                 }
                                 $("#firstname").val(contacts[idSelected][0]);
                                 $("#email").val(contacts[idSelected][2]);
-                                $("#phoneNumber").val(contacts[idSelected][3]);
+                                $("#phoneNumber").val(Clean_Phone_Number(contacts[idSelected][3]));
                                 $("#creationDate").val(contacts[idSelected][4]);
                                 $("#createButton").prop("disabled", true);
                                 $("#updateButton").prop("disabled",false);
@@ -262,7 +258,7 @@
                                 $("#firstname").val(contacts[idSelected][0]);
                                 $("#lastname").val(contacts[idSelected][1]);
                                 $("#email").val(contacts[idSelected][2]);
-                                $("#phoneNumber").val(contacts[idSelected][3]);
+                                $("#phoneNumber").val(Clean_Phone_Number(contacts[idSelected][3]));
                                 $("#creationDate").val(contacts[idSelected][4]);
                                 $("#createButton").prop("disabled", true);
                                 $("#updateButton").prop("disabled",false);
@@ -381,6 +377,15 @@
                 $("#creationDate").val("");
             }
 
+            function Clean_Phone_Number(phoneNumber) {
+                var phone = phoneNumber.replace("(", "");
+                phone = phone.replace(")", "");
+                phone = phone.replace(" ", "");
+                phone = phone.replace("-", "");
+                return phone;
+            }
+
         </script>
-    </body>
-</html>
+
+
+</body></html>

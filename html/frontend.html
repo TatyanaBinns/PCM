@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
-	<head>
+<html lang="en"><head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Registration Form</title>
-		<script src="js/jquery-3.6.0.js" type="text/javascript" ></script>
-		<script src="js/jquery-3.6.0.min.js" type="text/javascript" ></script>
+		<script src="js/jquery-3.6.0.js" type="text/javascript"></script>
+		<script src="js/jquery-3.6.0.min.js" type="text/javascript"></script>
 		<link rel="stylesheet" href="css/reg.css">
 
 
@@ -14,93 +13,92 @@
 
 	<body>
 
-		
-		<div class = "wrapper_form">
-		
 
-			<div class = "container_form">
+		<div class="wrapper_form">
 
-				<div class = "image">
+
+			<div class="container_form">
+
+				<div class="image">
 					<h1>Registration Form </h1>
 				</div>
 
-				<div class= "title_container">
+				<div class="title_container">
 					<h2></h2>
 				</div>
 
-				<div class = "row_fix">
-					<div class = "">
+				<div class="row_fix">
+					<div class="">
 						<form method="post">
-							<div class = "row_fix">
-								<div class = "column_half">
-									<div class = "input_box"> <span><i aria-hidden="true" class = "for-user"></i> </span>
-										<label for="firstname" > First Name:</label>
-										<input type="text" id="firstname" name = "firstname" placeholder = "Ex: John" required/>
+							<div class="row_fix">
+								<div class="column_half">
+									<div class="input_box"> <span><i aria-hidden="true" class="for-user"></i> </span>
+										<label for="firstname"> First Name:</label>
+										<input type="text" id="firstname" name="firstname" placeholder="Ex: John" required="">
 
 
 									</div>
 								</div>
-								<br /><br />
+								<br><br>
 
-								<div class = "column_half">
+								<div class="column_half">
 
-									<div class = "input_box"> <span><i aria-hidden="true" class = "for-user"></i> </span>
+									<div class="input_box"> <span><i aria-hidden="true" class="for-user"></i> </span>
 										<label for="lastname"> Last Name:</label>
-										<input type="text" id="lastname"name = "lastname" placeholder = "Ex: Doe" required/>
+										<input type="text" id="lastname" name="lastname" placeholder="Ex: Doe" required="">
 
 									</div>
-									<br /><br />
+									<br><br>
 
 							</div>
 
-							<div class = "input_box"> <span> <i aria-hidden="true" class="envelope"></i></span>
+							<div class="input_box"> <span> <i aria-hidden="true" class="envelope"></i></span>
 								<label for="email"> Email:</label>
-								<input type="email" id = "email" name = "email" placeholder="Email" required />
+								<input type="email" id="email" name="email" placeholder="Email" required="">
 
 
 							</div>
-							<br /><br />
+							<br><br>
 
-							<div class = "input_box"> <span> <i aria-hidden ="true" class = "lock"></i></span>
+							<div class="input_box"> <span> <i aria-hidden="true" class="lock"></i></span>
 								<label for="password"> Enter Password:</label>
 								<!-- password must contain 1 uppper case, 1 lower case, 1 special character, 1 digit -->
-								<input type="password" id="password" name = "password" placeholder = "Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,15}" 
-								minlength="8" maxlength="15" required />								
-								
+								<input type="password" id="password" name="password" placeholder="Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,15}" minlength="8" maxlength="15" required="">
+
 
 							</div>
-							<div class ="requirements", id="requi" hidden >
+							<div class="requirements" ,="" id="requi" hidden="">
 								<span><b>Password must contain the following:</b></span>
-								<br/><br/>
+								<br><br>
 								<span id="capital" class="invalid">A <b>capital (uppercase) letter</b></span>
-								<br/>
+								<br>
 								<span id="number" class="invalid">A <b>Number</b></span>
-								<br/>
+								<br>
 								<span id="special" class="invalid">A <b>Special character</b></span>
-								<br/>
+								<br>
 								<span id="length" class="invalid">A <b>Minimum of 8 characters</b></span>
 							</div>
 
-							
-							<br/><br/>
 
-							<div class = "input_box"> <span> <i aria-hidden ="true" class = "lock"></i></span>
+							<br><br>
+
+							<div class="input_box"> <span> <i aria-hidden="true" class="lock"></i></span>
 								<label for="password"> Re-Enter Password:</label>
-								<input type="password" id="reEnterPassword" name = "re_password" placeholder = "Password" required />
-								
+								<input type="password" id="reEnterPassword" name="re_password" placeholder="Password" required="">
+
 
 							</div>
 
-							<p class="passwordmatch" id = "password" style="left:185px;"> </p>
+							<p class="passwordmatch" id="password" style="left:185px;"> </p>
 
-							<br /><br /><br />
+							<br><br><br>
 
-							<input id="backToLoginButton" class="button" type="submit" value="Back to Login" />
-							<input id="registerButton" class="button" type="submit" value="Register"/>
+							<input id="backToLoginButton" class="button" type="submit" value="Back to Login">
+							<input id="registerButton" class="button" type="submit" value="Register">
 
-						</form>
 
-					</div>
+
+					</div></form>
 
 				</div>
 
@@ -111,34 +109,34 @@
 
 		<script>
 		$(document).ready(function() {
-				
+
 				$("#password").click( function(){
 					var passcode = $("#password").val();
-					
-					
+
+
 					if(passcode == '')
 					{
 						$("#requi").show();
 						$("#requi").delay("5000").fadeOut();
 
 					}
-					
+
 
 				});
-				
+
 				$("#reEnterPassword").keyup(function(){
 
 					var first_pass = $("#password").val();
 					var confirmation = $("#reEnterPassword").val();
 
-					
+
 					if(first_pass != confirmation)
 					{
 						$("#registerButton").hide();
 						$("p").text("Password does not match").css("color","red" );
 						$("p").delay("fast").fadeIn();
-						
-						
+
+
 
 					}
 
@@ -150,7 +148,7 @@
 						$("span").hide();
 
 					}
-					
+
 
 				});
 
@@ -166,11 +164,11 @@
 								$("#password").val(),
 								$("#reEnterPassword").val()
 						);
-										
-					
+
+
 				});
 
-				
+
 
 				$("button").focusout( function() {
 						$("#errorMessage").text("");
@@ -179,7 +177,7 @@
 		});
 
 		function Request_Register_User( firstName, lastName, email, password, confirmPassword ) {
-						
+
 				var endPoint = "http://pcm.sudonet.cc/LAMPAPI/registerUser.php";
 				var request = $.ajax({
 						method: "POST",
@@ -192,23 +190,23 @@
 								confirmpassword: confirmPassword
 						})
 
-						
 
-						
-						
+
+
+
 				})
 
 				.done(function( response ) {
 
 						if ( !response.error ) {
-							
+
 							$("#errorMessage").text( "User Created successfully.");
 							localStorage.userName = email;
-							
+
 							location.href = "index.html";
 						}
-												
-						
+
+
 						else {
 								$("#errorMessage").text(response.error);
 						};
@@ -228,7 +226,7 @@
 		</script>
 
 
-	</body>
 
-</html>
 
+
+</div></body></html>

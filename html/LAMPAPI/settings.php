@@ -50,27 +50,63 @@ else
 
   $stmt->close();
 
+  $error = 0;
   if (strcmp($newpassword, $confirmpassword) != 0)
   {
-    returnWithError("Passwords do not match");
+    if ($error == 0)
+    {
+      $results .= '"Passwords need to match"';
+    }
+    else {
+      $results .= ", " . '"Passwords need to match"';
+    }
+    $error = 2;
   }
   else if (strlen($newpassword) < 8)
   {
-    returnWithError("New password length is not at least 8 characters long");
+    if ($error == 0)
+    {
+      $results .= '"Password length needs to be at least 8 characters long"';
+    }
+    else {
+      $results .= ", " . '"Password length needs to be at least 8 characters long"';
+    }
+    $error = 1;
   }
   else if (!preg_match('/[A-Z]/', $newpassword))
   {
-    returnWithError("New password does not contain at least one upper case letter");
+    if ($error == 0)
+    {
+      $results .= '"Needs to contain at least one upper case letter"';
+    }
+    else {
+      $results .= ", " . '"Needs to contain at least one upper case letter"';
+    }
+    $error = 1;
   }
   else if (!preg_match('/[0-9]/', $newpassword))
   {
-    returnWithError("New password does not contain at least one integer");
+    if ($error == 0)
+    {
+      $results .= '"Needs to contain at least one integer"';
+    }
+    else {
+      $results .= ", " . '"Needs to contain at least one integer"';
+    }
+    $error = 1;
   }
   else if (!preg_match('/\W/', $newpassword))
   {
-    returnWithError("New password does not contain at least one special character");
+    if ($error == 0)
+    {
+      $results .= '"Needs to contain at least one special character"';
+    }
+    else {
+      $results .= ", " . '"Needs to contain at least one special character"';
+    }
+    $error = 1;
   }
-  else {
+  if ($error == 0) {
     $stmt = $conn->prepare("UPDATE Users SET FirstName=?, LastName=?, Email=?, PasswordHash=? WHERE UserId=?");
     $stmt->bind_param("ssssi", $firstname, $lastname, $email, password_hash($newpassword, PASSWORD_DEFAULT), $userId);
     $stmt->execute();
@@ -78,6 +114,14 @@ else
 
     $stmt->close();
     $conn->close();
+  }
+  else if ($error == 1) {
+    $err = "Password format is incorrect";
+  returnWithError($err/*$results*/);
+  }
+  else {
+    $err = "Passwords need to match";
+    returnWithError($err);
   }
 }
 
@@ -94,7 +138,13 @@ function sendResultInfoAsJson( $obj )
 
 function returnWithError( $err )
 {
-  $retValue = '{"error":"' . $err . '"}';
+  $retvalue = '{"error":"' . $err . '"}';
+  sendResultInfoAsJson( $retvalue );
+}
+
+function returnWithError2( $err )
+{
+  $retValue = '{"error":[' . $err . ']}';
   sendResultInfoAsJson( $retValue );
 }
 

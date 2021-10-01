@@ -14,13 +14,33 @@
 	}
 	else
 	{
-		$stmt = $conn->prepare("INSERT INTO Contacts (UserId,NameFirst,NameLast,Email,PhoneNumber) VALUES(?,?,?,?,?)");
-		$stmt->bind_param("issss", $userId, $firstname, $lastname, $email, $phonenum);
+		$stmt = $conn->prepare("SELECT UserId, Email FROM Contacts WHERE UserId=? AND Email=?");
+		$stmt->bind_param("is", $userId, $email);
 		$stmt->execute();
-		$stmt->close();
+		$result = $stmt->get_result();
 
+		if( $row = $result->fetch_assoc() )
+		{
+			returnWithError("Email already in use");
+			$stmt->close();
+		}
+		else {
+			if (strlen($phonenum) != 10 OR strpos($phonenum, "(") !== false OR strpos($phonenum, ")") !== false OR strpos($phonenum, "-") !== false)
+			{
+				$stmt->close();
+				returnWithError("Phone number format is not correct");
+			}
+			else
+			{
+				$stmt->close();
+				$stmt = $conn->prepare("INSERT INTO Contacts (UserId,NameFirst,NameLast,Email,PhoneNumber) VALUES(?,?,?,?,?)");
+				$stmt->bind_param("issss", $userId, $firstname, $lastname, $email, $phonenum);
+				$stmt->execute();
+				$stmt->close();
+				returnWithError("");
+			}
+		}
 		$conn->close();
-		returnWithError("");
 	}
 
 	function getRequestInfo()
